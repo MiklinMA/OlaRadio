@@ -2,8 +2,9 @@ import os
 import sys
 import threading
 from queue import Queue
+from random import random
 
-from yandex_music import Client
+import yandex_music
 import pygame
 
 token = os.getenv('YANDEX_MUSIC_TOKEN')
@@ -14,39 +15,142 @@ assert cache
 
 player = player.split(' ')
 
-client = Client(token).init()
-station = "user:onyourwave"
+client = yandex_music.Client(token).init()
+ui_string = "desktop_win-home-playlist_of_the_day-playlist-default"
+station_id = "user:onyourwave"
+
+
+class TaskQueue:
+    def __init__(self):
+        self.__queue = []
+        self.__in_progress = False
+
+    def addTask(self, name, function, kwargs):
+        self.__queue.append((name, function, kwargs))
+        self.__do_next()
+
+    def __do_next(self):
+        if self.__in_progress:
+            return
+        if not self.__queue:
+            return
+        self.__in_progress = True
+        args = self.__queue.pop(0)
+        threading.Thread(target=self.__process, args=args).start()
+
+    def __process(self, name, function, kwargs):
+        function(**kwargs)
+        self.__in_progress = False
+        self.__do_next()
+
+def generate_play_id():
+    return "%s-%s-%s" % (int(random() * 1000), int(random() * 1000), int(random() * 1000))
+
+class API:
+    def radio_started(station):
+        client.rotor_station_feedback_radio_started(
+            station=station.station_id,
+            from_=station.station_id.replace(':', '-'),
+            batch_id=station.batch_id
+        )
+
+    def track_start(station, track):
+        client.play_audio(
+            from_=ui_string,
+            track_id=track.id,
+            album_id=track.albums[0].id,
+            play_id=track.play_id,
+            track_length_seconds=int(track.duration_ms / 1000),
+            total_played_seconds=0,
+            end_position_seconds=0,
+        )
+        client.rotor_station_feedback_track_started(
+            station=station.station_id,
+            track_id=track.id,
+            batch_id=station.batch_id
+        )
+
+    def track_finish(station, track):
+        duration = int(track.duration_ms / 1000)
+        position = getattr(track, 'skip_position', duration)
+        client.play_audio(
+            from_=ui_string,
+            track_id=track.id,
+            album_id=track.albums[0].id,
+            play_id=track.play_id,
+            track_length_seconds=duration,
+            total_played_seconds=position,
+            end_position_seconds=position,
+        )
+        if getattr(track, 'skip_position', None):
+            client.rotor_station_feedback_skip(
+                station=station.station_id,
+                track_id=track.id,
+                total_played_seconds=position,
+                batch_id=station.batch_id,
+            )
+
+        client.rotor_station_feedback_track_finished(
+            station=station.station_id,
+            track_id=track.id,
+            batch_id=station.batch_id,
+            total_played_seconds=duration,
+        )
+
 
 def get_track():
+    current_track = None
+
     while True:
-        tracks = client.rotor_station_tracks(station).sequence
+        if current_track is None:
+            station = client.rotor_station_tracks(station_id)
+            station.station_id = station_id
+            API.radio_started(station)
+        else:
+            station = client.rotor_station_tracks(station_id, queue=current_track.track_id)
+
+        tracks = client.tracks([t.track.track_id for t in station.sequence])
+
+        # DEBUG
         print("Tracks:")
-        for x in tracks:
-            _, title, _ = get_info(x.track)
+        for track in tracks:
+            _, title, _ = get_info(track)
             print(title)
         print("====================")
 
-        first = tracks.pop(0)
-        track = first.track
-        download(track)
+        if current_track is None:
+            current_track = tracks.pop(0)
+            current_track.play_id = generate_play_id()
+            download(current_track)
 
-        for x in tracks:
-            t = threading.Thread(target=download, args=[x.track])
+        for track in tracks:
+            track.play_id = generate_play_id()
+
+            API.track_start(station, current_track)
+
+            t = threading.Thread(target=download, args=[track])
             t.daemon = True
             t.start()
-            yield track
-            t.join()
-            track = x.track
 
-def get_info(track):
+            yield current_track
+
+            API.track_finish(station, current_track)
+
+            t.join()
+
+            current_track = track
+
+
+def get_info(track, with_lyrics=False):
     artist = " feat. ".join([a.name for a in track.artists])
     title = f"{artist} - {track.title}".replace("/", "")
     path = f'{cache}/{title}.mp3'
     lyrics = 'No lyrics...'
 
-    sup = track.get_supplement()
-    if sup.lyrics:
-        lyrics = sup.lyrics.full_lyrics
+    if with_lyrics:
+        sup = track.get_supplement()
+        if sup.lyrics:
+            lyrics = sup.lyrics.full_lyrics
 
     return path, title, lyrics
 
@@ -58,7 +162,21 @@ def download(track):
 
     print(f'Downloading {title}...')
     os.makedirs("/".join(path.split("/")[:-1]), exist_ok=True)
-    track.download(path)
+
+    dis = track.download_info or track.get_download_info()
+
+    br = 0
+    info = None
+
+    for di in dis:
+        if di.codec != 'mp3':
+            continue
+        if di.bitrate_in_kbps > br:
+            info = di
+    if not info:
+        raise yandex_music.exceptions.InvalidBitrateError('Unavailable bitrate')
+
+    info.download(path)
 
 class Player:
     def __init__(self) -> None:
@@ -83,7 +201,7 @@ class Player:
         self.track = track
         self.playing = lambda: False
 
-        path, title, lyrics = get_info(self.track)
+        path, title, lyrics = get_info(self.track, with_lyrics=True)
 
         def get_cmd():
             cmd = ""
@@ -99,7 +217,6 @@ class Player:
         if not self.th.is_alive():
             self.th.start()
 
-        client.rotor_station_feedback_track_started(station, track.id)
         print('> ', end='', flush=True)
 
         while self.playing():
@@ -110,14 +227,7 @@ class Player:
 
             pygame.time.Clock().tick(10)
 
-        if self.track:
-            client.rotor_station_feedback_track_finished(
-                station,
-                self.track.id,
-                int(self.track.duration_ms / 1000)
-            )
-            self.track = None
-
+        self.track = None
         self.playing = lambda: False
         print()
 
@@ -141,13 +251,7 @@ class Player:
         # sys.stdin.flush()  # TODO: finish stdin.read somehow
 
     def next(self):
-
-        client.rotor_station_feedback_skip(
-            station,
-            self.track.id,
-            int(pygame.mixer.music.get_pos() / 1000),
-        )
-
+        self.track.skip_position = int(pygame.mixer.music.get_pos() / 1000)
         self.track = None
         pygame.mixer.music.stop()
 
