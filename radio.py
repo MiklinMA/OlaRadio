@@ -38,8 +38,6 @@ def get_track():
             t.join()
             track = x.track
 
-        yield track
-
 def get_info(track):
     artist = " feat. ".join([a.name for a in track.artists])
     title = f"{artist} - {track.title}".replace("/", "")
