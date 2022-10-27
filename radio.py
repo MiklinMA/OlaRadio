@@ -102,13 +102,13 @@ def get_track():
     current_track = None
 
     while True:
-        if current_track is None:
-            station = client.rotor_station_tracks(station_id)
-            station.station_id = station_id
-            API.radio_started(station)
-        else:
-            station = client.rotor_station_tracks(station_id, queue=current_track.track_id)
+        kwargs = dict()
+        if current_track:
+            kwargs['queue'] = current_track.track_id
 
+        station = client.rotor_station_tracks(station_id, **kwargs)
+
+        station.station_id = station_id
         tracks = client.tracks([t.track.track_id for t in station.sequence])
 
         # DEBUG
@@ -119,6 +119,7 @@ def get_track():
         print("====================")
 
         if current_track is None:
+            API.radio_started(station)
             current_track = tracks.pop(0)
             current_track.play_id = generate_play_id()
             download(current_track)
