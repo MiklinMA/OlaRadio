@@ -25,7 +25,7 @@ class API:
     def tracks(self):
         while True:
             self.station = self.client.rotor_station_tracks(self.station_id, **(
-                {'queue': self.current_track.track_id}
+                {'queue': self.current_track.track.track_id}
                 if self.current_track else {}
             ))
 
@@ -83,10 +83,10 @@ class API:
             album_id=self.current_track.album_id,
             play_id=self.current_track.play_id,
             track_length_seconds=self.current_track.duration,
-            total_played_seconds=self.current_track.position,
+            total_played_seconds=self.current_track.position,  # ZERO
             end_position_seconds=self.current_track.position,
         )
-        if getattr(self.current_track, 'skip_position', None):
+        if self.current_track.position:
             self.client.rotor_station_feedback_skip(
                 station=self.station_id,
                 track_id=self.current_track.id,
