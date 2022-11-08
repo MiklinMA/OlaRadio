@@ -98,8 +98,8 @@ class Station:
 
     def event_track_like(self, track=None):
         track = track or self.current_track
-        self.client.users_likes_tracks_add(track_id=track.id)
+        self.client.users_likes_tracks_add(track.id)
 
     def event_track_dislike(self, track=None):
         track = track or self.current_track
-        self.client.users_dislikes_tracks_add(track_id=track.id)
+        self.client.users_dislikes_tracks_add(track.id)
