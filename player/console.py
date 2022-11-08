@@ -59,7 +59,8 @@ class Player:
             if self.track:
                 self.track.position = int(pygame.mixer.music.get_pos() / 1000)
 
-        self.track.position = self.track.duration
+        if self.track.position == 0:
+            self.track.position = self.track.duration
 
         self.track = None
         self.playing = lambda: False
