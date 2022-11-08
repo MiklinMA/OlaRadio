@@ -11,14 +11,12 @@ class Player:
         self.track = None
         self.exit = False
         self.cmds = dict(
-            p=self.pause,
-            u=self.unpause,
-            s=self.stop,
-            n=self.next,
-            pause=self.pause,
-            unpause=self.unpause,
-            stop=self.stop,
-            next=self.next,
+            pause=self.pause, p=self.pause,
+            unpause=self.unpause, u=self.unpause,
+            stop=self.stop, s=self.stop,
+            next=self.next, n=self.next,
+            like=self.like, l=self.like,
+            dislike=self.dislike, d=self.dislike,
         )
         self.iq = Queue()
         self.th = threading.Thread(target=self.getc)
@@ -65,6 +63,10 @@ class Player:
 
         return not self.exit
 
+    @property
+    def position(self):
+        return int(pygame.mixer.music.get_pos() / 1000)
+
     def pause(self):
         self.playing = lambda: self.track is not None
         pygame.mixer.music.pause()
@@ -78,6 +80,14 @@ class Player:
         pygame.mixer.music.stop()
 
     def next(self):
-        self.track.position = int(pygame.mixer.music.get_pos() / 1000)
+        self.track.position = self.position
         self.track.skip()
+        pygame.mixer.music.stop()
+
+    def like(self):
+        self.track.like()
+
+    def dislike(self):
+        self.track.position = self.position
+        self.track.dislike()
         pygame.mixer.music.stop()

@@ -95,3 +95,11 @@ class Station:
             total_played_seconds=track.position,
             batch_id=self.station.batch_id,
         )
+
+    def event_track_like(self, track=None):
+        track = track or self.current_track
+        self.client.users_likes_tracks_add(track_id=track.id)
+
+    def event_track_dislike(self, track=None):
+        track = track or self.current_track
+        self.client.users_dislikes_tracks_add(track_id=track.id)

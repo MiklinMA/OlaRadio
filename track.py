@@ -36,8 +36,12 @@ class Track:
 
         return self._lyrics or 'No lyrics...'
 
+    @property
+    def exists(self):
+        return os.path.exists(self.path)
+
     def download(self):
-        if os.path.exists(self.path):
+        if self.exists:
             return
 
         print(f'Downloading {self.title}...')
@@ -63,3 +67,9 @@ class Track:
 
     def skip(self):
         self.station.event_track_skip(self)
+
+    def like(self):
+        self.station.event_track_like(self)
+
+    def dislike(self):
+        self.station.event_track_dislike(self)
