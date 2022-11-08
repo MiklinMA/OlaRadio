@@ -76,6 +76,8 @@ class Track:
 
     def dislike(self):
         self.station.event_track_dislike(self)
+        if self.exists:
+            os.remove(self.path)
 
     def __reload_tags(self):
         if not self.exists:
