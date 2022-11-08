@@ -56,6 +56,11 @@ class Player:
 
             pygame.time.Clock().tick(10)
 
+            if self.track:
+                self.track.position = int(pygame.mixer.music.get_pos() / 1000)
+
+        self.track.position = self.track.duration
+
         self.track = None
         self.playing = lambda: False
         print()
@@ -71,11 +76,9 @@ class Player:
         pygame.mixer.music.unpause()
 
     def stop(self):
-        self.next()
         self.exit = True
-        # sys.stdin.flush()  # TODO: finish stdin.read somehow
+        pygame.mixer.music.stop()
 
     def next(self):
-        self.track.position = int(pygame.mixer.music.get_pos() / 1000)
-        self.track = None
+        self.track.skip()
         pygame.mixer.music.stop()

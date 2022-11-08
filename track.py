@@ -8,7 +8,8 @@ class Track:
     class Error(Exception):
         ...
 
-    def __init__(self, track):
+    def __init__(self, track, station):
+        self.station = station
         self.track = track
         self.id = track.id
         self.album_id = track.albums[0].id
@@ -56,3 +57,9 @@ class Track:
             raise Track.Error(f'Download info unavailable for {self.title}')
 
         info.download(self.path)
+
+    def trace(self):
+        self.station.event_track_trace(self)
+
+    def skip(self):
+        self.station.event_track_skip(self)
