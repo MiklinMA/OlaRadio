@@ -38,7 +38,7 @@ class Player:
                 cmd += self.iq.get()
             return cmd.replace('\n', '')
 
-        print(f"{track.title}\n--------\n{track.lyrics}")
+        print(f"\n{track.title}\n--------\n{track.lyrics}\n")
         pygame.mixer.music.load(track.path)
         pygame.mixer.music.play()
         self.playing = lambda: pygame.mixer.music.get_busy()
@@ -55,9 +55,6 @@ class Player:
                 print('> ', end='', flush=True)
 
             pygame.time.Clock().tick(10)
-
-            if self.track:
-                self.track.position = int(pygame.mixer.music.get_pos() / 1000)
 
         if self.track.position == 0:
             self.track.position = self.track.duration
@@ -81,5 +78,6 @@ class Player:
         pygame.mixer.music.stop()
 
     def next(self):
+        self.track.position = int(pygame.mixer.music.get_pos() / 1000)
         self.track.skip()
         pygame.mixer.music.stop()

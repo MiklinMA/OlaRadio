@@ -34,7 +34,7 @@ class Track:
             if sup.lyrics:
                 self._lyrics = sup.lyrics.full_lyrics
 
-        return self._lyrics
+        return self._lyrics or 'No lyrics...'
 
     def download(self):
         if os.path.exists(self.path):
