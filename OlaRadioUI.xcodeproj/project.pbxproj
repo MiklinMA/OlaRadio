@@ -1,0 +1,581 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		09CC6998291F370400CC9245 /* OlaRadioUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC6997291F370400CC9245 /* OlaRadioUIApp.swift */; };
+		09CC699A291F370400CC9245 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC6999291F370400CC9245 /* ContentView.swift */; };
+		09CC699C291F370400CC9245 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09CC699B291F370400CC9245 /* Assets.xcassets */; };
+		09CC699F291F370400CC9245 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09CC699E291F370400CC9245 /* Preview Assets.xcassets */; };
+		09CC69AA291F370400CC9245 /* OlaRadioUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC69A9291F370400CC9245 /* OlaRadioUITests.swift */; };
+		09CC69B4291F370400CC9245 /* OlaRadioUIUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC69B3291F370400CC9245 /* OlaRadioUIUITests.swift */; };
+		09CC69B6291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC69B5291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		09CC69A6291F370400CC9245 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 09CC698C291F370300CC9245 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 09CC6993291F370400CC9245;
+			remoteInfo = OlaRadioUI;
+		};
+		09CC69B0291F370400CC9245 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 09CC698C291F370300CC9245 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 09CC6993291F370400CC9245;
+			remoteInfo = OlaRadioUI;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		09CC6994291F370400CC9245 /* OlaRadioUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OlaRadioUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		09CC6997291F370400CC9245 /* OlaRadioUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaRadioUIApp.swift; sourceTree = "<group>"; };
+		09CC6999291F370400CC9245 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		09CC699B291F370400CC9245 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		09CC699E291F370400CC9245 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		09CC69A0291F370400CC9245 /* OlaRadioUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OlaRadioUI.entitlements; sourceTree = "<group>"; };
+		09CC69A5291F370400CC9245 /* OlaRadioUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OlaRadioUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		09CC69A9291F370400CC9245 /* OlaRadioUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaRadioUITests.swift; sourceTree = "<group>"; };
+		09CC69AF291F370400CC9245 /* OlaRadioUIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OlaRadioUIUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		09CC69B3291F370400CC9245 /* OlaRadioUIUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaRadioUIUITests.swift; sourceTree = "<group>"; };
+		09CC69B5291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaRadioUIUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		09CC6991291F370400CC9245 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		09CC69A2291F370400CC9245 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		09CC69AC291F370400CC9245 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		09CC698B291F370300CC9245 = {
+			isa = PBXGroup;
+			children = (
+				09CC6996291F370400CC9245 /* OlaRadioUI */,
+				09CC69A8291F370400CC9245 /* OlaRadioUITests */,
+				09CC69B2291F370400CC9245 /* OlaRadioUIUITests */,
+				09CC6995291F370400CC9245 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		09CC6995291F370400CC9245 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				09CC6994291F370400CC9245 /* OlaRadioUI.app */,
+				09CC69A5291F370400CC9245 /* OlaRadioUITests.xctest */,
+				09CC69AF291F370400CC9245 /* OlaRadioUIUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		09CC6996291F370400CC9245 /* OlaRadioUI */ = {
+			isa = PBXGroup;
+			children = (
+				09CC6997291F370400CC9245 /* OlaRadioUIApp.swift */,
+				09CC6999291F370400CC9245 /* ContentView.swift */,
+				09CC699B291F370400CC9245 /* Assets.xcassets */,
+				09CC69A0291F370400CC9245 /* OlaRadioUI.entitlements */,
+				09CC699D291F370400CC9245 /* Preview Content */,
+			);
+			path = OlaRadioUI;
+			sourceTree = "<group>";
+		};
+		09CC699D291F370400CC9245 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				09CC699E291F370400CC9245 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		09CC69A8291F370400CC9245 /* OlaRadioUITests */ = {
+			isa = PBXGroup;
+			children = (
+				09CC69A9291F370400CC9245 /* OlaRadioUITests.swift */,
+			);
+			path = OlaRadioUITests;
+			sourceTree = "<group>";
+		};
+		09CC69B2291F370400CC9245 /* OlaRadioUIUITests */ = {
+			isa = PBXGroup;
+			children = (
+				09CC69B3291F370400CC9245 /* OlaRadioUIUITests.swift */,
+				09CC69B5291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift */,
+			);
+			path = OlaRadioUIUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		09CC6993291F370400CC9245 /* OlaRadioUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 09CC69B9291F370400CC9245 /* Build configuration list for PBXNativeTarget "OlaRadioUI" */;
+			buildPhases = (
+				09CC6990291F370400CC9245 /* Sources */,
+				09CC6991291F370400CC9245 /* Frameworks */,
+				09CC6992291F370400CC9245 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OlaRadioUI;
+			productName = OlaRadioUI;
+			productReference = 09CC6994291F370400CC9245 /* OlaRadioUI.app */;
+			productType = "com.apple.product-type.application";
+		};
+		09CC69A4291F370400CC9245 /* OlaRadioUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 09CC69BC291F370400CC9245 /* Build configuration list for PBXNativeTarget "OlaRadioUITests" */;
+			buildPhases = (
+				09CC69A1291F370400CC9245 /* Sources */,
+				09CC69A2291F370400CC9245 /* Frameworks */,
+				09CC69A3291F370400CC9245 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				09CC69A7291F370400CC9245 /* PBXTargetDependency */,
+			);
+			name = OlaRadioUITests;
+			productName = OlaRadioUITests;
+			productReference = 09CC69A5291F370400CC9245 /* OlaRadioUITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		09CC69AE291F370400CC9245 /* OlaRadioUIUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 09CC69BF291F370400CC9245 /* Build configuration list for PBXNativeTarget "OlaRadioUIUITests" */;
+			buildPhases = (
+				09CC69AB291F370400CC9245 /* Sources */,
+				09CC69AC291F370400CC9245 /* Frameworks */,
+				09CC69AD291F370400CC9245 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				09CC69B1291F370400CC9245 /* PBXTargetDependency */,
+			);
+			name = OlaRadioUIUITests;
+			productName = OlaRadioUIUITests;
+			productReference = 09CC69AF291F370400CC9245 /* OlaRadioUIUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		09CC698C291F370300CC9245 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1410;
+				LastUpgradeCheck = 1410;
+				TargetAttributes = {
+					09CC6993291F370400CC9245 = {
+						CreatedOnToolsVersion = 14.1;
+					};
+					09CC69A4291F370400CC9245 = {
+						CreatedOnToolsVersion = 14.1;
+						TestTargetID = 09CC6993291F370400CC9245;
+					};
+					09CC69AE291F370400CC9245 = {
+						CreatedOnToolsVersion = 14.1;
+						TestTargetID = 09CC6993291F370400CC9245;
+					};
+				};
+			};
+			buildConfigurationList = 09CC698F291F370300CC9245 /* Build configuration list for PBXProject "OlaRadioUI" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 09CC698B291F370300CC9245;
+			productRefGroup = 09CC6995291F370400CC9245 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				09CC6993291F370400CC9245 /* OlaRadioUI */,
+				09CC69A4291F370400CC9245 /* OlaRadioUITests */,
+				09CC69AE291F370400CC9245 /* OlaRadioUIUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		09CC6992291F370400CC9245 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09CC699F291F370400CC9245 /* Preview Assets.xcassets in Resources */,
+				09CC699C291F370400CC9245 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		09CC69A3291F370400CC9245 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		09CC69AD291F370400CC9245 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		09CC6990291F370400CC9245 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09CC699A291F370400CC9245 /* ContentView.swift in Sources */,
+				09CC6998291F370400CC9245 /* OlaRadioUIApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		09CC69A1291F370400CC9245 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09CC69AA291F370400CC9245 /* OlaRadioUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		09CC69AB291F370400CC9245 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09CC69B4291F370400CC9245 /* OlaRadioUIUITests.swift in Sources */,
+				09CC69B6291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		09CC69A7291F370400CC9245 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 09CC6993291F370400CC9245 /* OlaRadioUI */;
+			targetProxy = 09CC69A6291F370400CC9245 /* PBXContainerItemProxy */;
+		};
+		09CC69B1291F370400CC9245 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 09CC6993291F370400CC9245 /* OlaRadioUI */;
+			targetProxy = 09CC69B0291F370400CC9245 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		09CC69B7291F370400CC9245 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		09CC69B8291F370400CC9245 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		09CC69BA291F370400CC9245 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OlaRadioUI/OlaRadioUI.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"OlaRadioUI/Preview Content\"";
+				DEVELOPMENT_TEAM = QNREQQTC5Y;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.olasoft.OlaRadioUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		09CC69BB291F370400CC9245 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OlaRadioUI/OlaRadioUI.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"OlaRadioUI/Preview Content\"";
+				DEVELOPMENT_TEAM = QNREQQTC5Y;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.olasoft.OlaRadioUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		09CC69BD291F370400CC9245 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QNREQQTC5Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.olasoft.OlaRadioUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OlaRadioUI.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OlaRadioUI";
+			};
+			name = Debug;
+		};
+		09CC69BE291F370400CC9245 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QNREQQTC5Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.olasoft.OlaRadioUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OlaRadioUI.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OlaRadioUI";
+			};
+			name = Release;
+		};
+		09CC69C0291F370400CC9245 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QNREQQTC5Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.olasoft.OlaRadioUIUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = OlaRadioUI;
+			};
+			name = Debug;
+		};
+		09CC69C1291F370400CC9245 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QNREQQTC5Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.olasoft.OlaRadioUIUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = OlaRadioUI;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		09CC698F291F370300CC9245 /* Build configuration list for PBXProject "OlaRadioUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				09CC69B7291F370400CC9245 /* Debug */,
+				09CC69B8291F370400CC9245 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		09CC69B9291F370400CC9245 /* Build configuration list for PBXNativeTarget "OlaRadioUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				09CC69BA291F370400CC9245 /* Debug */,
+				09CC69BB291F370400CC9245 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		09CC69BC291F370400CC9245 /* Build configuration list for PBXNativeTarget "OlaRadioUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				09CC69BD291F370400CC9245 /* Debug */,
+				09CC69BE291F370400CC9245 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		09CC69BF291F370400CC9245 /* Build configuration list for PBXNativeTarget "OlaRadioUIUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				09CC69C0291F370400CC9245 /* Debug */,
+				09CC69C1291F370400CC9245 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 09CC698C291F370300CC9245 /* Project object */;
+}
