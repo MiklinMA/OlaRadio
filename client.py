@@ -133,3 +133,17 @@ class Client:
                     raw=True,
                 )
             )
+
+    def like(self, track_id, remove=False):
+        action = 'remove' if remove else 'add-multiple'
+        self.session.post(
+            f'/users/{self.me["uid"]}/likes/tracks/{action}',
+            {'track-ids': track_id},
+        )
+
+    def dislike(self, track_id, remove=False):
+        action = 'remove' if remove else 'add-multiple'
+        self.session.post(
+            f'/users/{self.me["uid"]}/dislikes/tracks/{action}',
+            {'track-ids': track_id},
+        )
