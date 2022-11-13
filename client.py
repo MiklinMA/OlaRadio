@@ -4,27 +4,32 @@ import xml.dom.minidom as minidom
 
 import requests
 
+DEBUG = True
+
 class Session(requests.Session):
     def __init__(self, token):
         super().__init__()
         self.base_url = 'https://api.music.yandex.net'
-        self.token = token
         self.headers.update({
             'X-Yandex-Music-Client': 'YandexMusicAndroid/23020251',
-            'Authorization': f'OAuth {self.token}',
+            'Authorization': f'OAuth {token}',
             'Accept-Language': 'ru',
         })
 
     def request(self, method, url, raw=False, *args, **kwargs):
+        kwargs.pop('allow_redirects', None)
         result = super().request(
-            method, f"{self.base_url}{url}",
+            method,
+            url if raw else f"{self.base_url}{url}",
             *args, **kwargs
         )
         # first request should be without user-agent header
         self.headers.update({
             'User-Agent': "Yandex-Music-API",
         })
-        print(method, url, *args, kwargs)
+        if DEBUG:
+            print(method, url, *args, kwargs or '')
+
         if raw:
             return result.content
 
@@ -58,16 +63,16 @@ class Client:
         return tracks
 
     def feedback(self, type, **kwargs):
-        self.session.post(f'/rotor/station/{self.id}/feedback',
-            params={
-                'batch-id': self.batch_id,
-            },
+        return self.session.post(f'/rotor/station/{self.id}/feedback',
             json={
                 'type': type,
                 'timestamp': datetime.now().timestamp(),
                 **kwargs,
-            }
-        )
+            },
+            params={
+                'batch-id': self.batch_id,
+            },
+        ) == 'ok'
 
     def event_radio_started(self):
         self.feedback('radioStarted', **{'from': self.id.replace(':', '-')})
@@ -77,6 +82,9 @@ class Client:
 
     def event_track_finished(self, track_id, total_played_seconds):
         self.feedback('trackFinished', trackId=track_id, totalPlayedSeconds=total_played_seconds)
+
+    def event_track_skip(self, track_id, total_played_seconds):
+        self.feedback('skip', trackId=track_id, totalPlayedSeconds=total_played_seconds)
 
     def event_play_audio(self, track_id, from_cache, play_id, duration, played, album_id):
         self.session.post(f'/play-audio', {
@@ -134,14 +142,14 @@ class Client:
                 )
             )
 
-    def like(self, track_id, remove=False):
+    def event_like(self, track_id, remove=False):
         action = 'remove' if remove else 'add-multiple'
         self.session.post(
             f'/users/{self.me["uid"]}/likes/tracks/{action}',
             {'track-ids': track_id},
         )
 
-    def dislike(self, track_id, remove=False):
+    def event_dislike(self, track_id, remove=False):
         action = 'remove' if remove else 'add-multiple'
         self.session.post(
             f'/users/{self.me["uid"]}/dislikes/tracks/{action}',

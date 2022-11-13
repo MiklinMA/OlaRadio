@@ -36,7 +36,7 @@ class Player:
                 cmd += self.iq.get()
             return cmd.replace('\n', '')
 
-        print(f"\n{track.title}\n--------\n{track.lyrics or 'No lyrics...'}\n")
+        print(f"\n{track.name}\n--------\n{track.lyrics or 'No lyrics...'}\n")
         pygame.mixer.music.load(track.path)
         pygame.mixer.music.play()
         self.playing = lambda: pygame.mixer.music.get_busy()

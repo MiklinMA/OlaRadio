@@ -5,37 +5,41 @@ import urllib.request
 from mutagen import id3
 
 cache = os.getenv('YANDEX_MUSIC_CACHE', os.getenv('TMPDIR'))
-assert cache
+assert cache, 'CACHE DIR NOT DEFINED'
 
 class Track:
-    class Error(Exception):
-        ...
-
     def __init__(self, track, station):
         self.station = station
-        self.track = track
-        self.id = track.id
-        self.album_id = track.albums[0].id
+        self.id = track['id']
+        self.album_id = track['albums'][0]['id']
         self.play_id = "%s-%s-%s" % (
             int(random() * 1000),
             int(random() * 1000),
             int(random() * 1000)
         )
-        self.duration = int(self.track.duration_ms / 1000)
+        self.duration = int(track['durationMs'] / 1000)
         self.position = 0
 
-        self.artist = track.artists[0].name
-        self.artists = " feat. ".join([a.name for a in track.artists])
-        self.title = f"{self.artist} - {track.title}".replace("/", "")
-        self.path = f'{cache}/{self.title}.mp3'
+        self.artist = track['artists'][0]['name']
+        self.album = track['albums'][0]['title']
+        self.title = track['title']
+
+        self.name = f"{self.artist} - {self.title}".replace("/", "")
+        self.path = f'{cache}/{self.name}.mp3'
+
         self._lyrics = None
+        self._lyrics_available = track['lyricsAvailable']
+
+        self.cached = self.exists
+        self.artwork = f'https://{track["coverUri"].replace("%%", "200x200")}'
+
+        self.artists = " feat. ".join([a['name'] for a in track['artists']])
 
     @property
     def lyrics(self):
         if not self._lyrics:
-            sup = self.track.get_supplement()
-            if sup.lyrics:
-                self._lyrics = sup.lyrics.full_lyrics
+            if self._lyrics_available:
+                self._lyrics = self.station.client.get_lyrics(self.id)
 
         return self._lyrics
 
@@ -45,23 +49,9 @@ class Track:
 
     def download(self):
         if not self.exists:
-            print(f'Downloading {self.title}...')
+            print(f'Downloading {self.name}...')
             os.makedirs("/".join(self.path.split("/")[:-1]), exist_ok=True)
-
-            dis = self.track.download_info or self.track.get_download_info()
-
-            br = 0
-            info = None
-
-            for di in dis:
-                if di.codec == 'mp3':
-                    if di.bitrate_in_kbps > br:
-                        info = di
-
-            if not info:
-                raise Track.Error(f'Download info unavailable for {self.title}')
-
-            info.download(self.path)
+            self.station.client.download(self.id, self.path)
 
         self.__reload_tags()
 
@@ -90,22 +80,19 @@ class Track:
         changed = False
 
         if not tags.get('TIT2'):
-            tags.add(id3.TIT2(encoding=3, text=self.track.title))
-            tags.add(id3.TALB(encoding=3, text=self.track.albums[0].title))
+            tags.add(id3.TIT2(encoding=3, text=self.title))
+            tags.add(id3.TALB(encoding=3, text=self.album))
             tags.add(id3.TPE1(encoding=3, text=self.artist))
             changed = True
 
-        lyrics = tags.get('USLT::eng')
-        if lyrics is not None:
-            self._lyrics = lyrics.text
+        if tags.get('USLT::eng'):
+            self._lyrics = tags['USLT::eng'].text
         elif self.lyrics is not None:
             tags.add(id3.USLT(encoding=3, lang='eng', text=self.lyrics))
             changed = True
 
         if not tags.get('APIC'):
-            art = urllib.request.urlopen(
-                f'https://{self.track.cover_uri.replace("%%", "200x200")}'
-            )
+            art = urllib.request.urlopen(self.artwork)
             tags.add(id3.APIC(
                 encoding=0,
                 mime=art.headers['Content-Type'],
