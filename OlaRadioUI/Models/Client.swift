@@ -6,11 +6,14 @@
 //
 
 import Foundation
+import CryptoKit
 
-enum ClientError: String, Error {
-    case InvalidURL = "Invalid URL"
-    case InvalidPacket = "Invalid packet"
-    case UndefinedValue = "Value is not defined"
+enum ClientError: Error {
+    case InvalidURL(String)
+    case InvalidPacket(String)
+    case UndefinedValue(String)
+    case InvalidDownloadInfo
+    case DataError
 }
 
 struct Session {
@@ -25,7 +28,7 @@ struct Session {
 
     private func call(url: URL,
                       method: String = "GET",
-                      json: [String:Any] = [:]
+                      json: [String:Any?] = [:]
     ) async throws -> Data {
         var request = URLRequest(url: url)
         request.httpMethod = method.uppercased()
@@ -45,32 +48,31 @@ struct Session {
     private func call(path: String,
                       method: String = "GET",
                       params: [String:Any] = [:],
-                      json: [String:Any] = [:],
-                      raw: Bool = false
+                      json: [String:Any?] = [:]
     ) async throws -> Data {
-        let urls = raw ? path : "\(base_url)\(path)"
-        guard var urlc = URLComponents(string: urls) else { throw ClientError.InvalidURL }
+        let urls = path.starts(with: /^http(s*):\/\//) ? path : "\(base_url)\(path)"
+        guard var urlc = URLComponents(string: urls) else { throw ClientError.InvalidURL(urls) }
         for param in params {
             urlc.queryItems?.append(URLQueryItem(name: param.key, value: String(describing: param.value)))
         }
-        guard let url = urlc.url?.absoluteURL else { throw ClientError.InvalidURL }
+        guard let url = urlc.url?.absoluteURL else { throw ClientError.InvalidURL(urls) }
         return try await call(url: url, method: method, json: json)
     }
     
-    func get(_ path: String, params: [String:Any] = [:], raw: Bool = false) async throws -> Data {
-        return try await call(path: path, method: "GET", params: params, raw: raw)
+    func get(_ path: String, params: [String:Any] = [:]) async throws -> Data {
+        return try await call(path: path, method: "GET", params: params)
     }
 
-    func get<T: Decodable>(_ path: String, params: [String:Any] = [:], raw: Bool = false, packet: T.Type) async throws -> T {
-        let data = try await call(path: path, method: "GET", params: params, raw: raw)
+    func get<T: Decodable>(_ path: String, params: [String:Any] = [:], packet: T.Type) async throws -> T {
+        let data = try await call(path: path, method: "GET", params: params)
         
         guard let packet = try? JSONDecoder().decode(T.self, from: data) else {
-            throw ClientError.InvalidPacket
+            throw ClientError.InvalidPacket(String(describing: T.self))
         }
         return packet
     }
     
-    func post(_ path: String, params: [String:Any] = [:], json: [String:Any] = [:]) async throws -> Data {
+    func post(_ path: String, params: [String:Any] = [:], json: [String:Any?] = [:]) async throws -> Data {
         return try await call(path: path, method: "POST", params: params, json: json)
     }
 }
@@ -95,7 +97,7 @@ final public class Client {
                                            packet: StatusPacket.self)
         self.account = packet.result.account
         guard let account = self.account else {
-            throw ClientError.UndefinedValue
+            throw ClientError.UndefinedValue("account")
         }
         return account
     }
@@ -119,7 +121,7 @@ final public class Client {
     
     func feedback(type: String, json: [String:Any]) async throws -> Bool {
         guard let batch_id = self.batch_id else {
-            throw ClientError.UndefinedValue
+            throw ClientError.UndefinedValue("batch_id")
         }
         var data: [String: Any] = [
             "type": type,
@@ -133,7 +135,7 @@ final public class Client {
             json: data
         )
         guard let result = String(data: response, encoding: .utf8) else {
-            throw ClientError.InvalidPacket
+            throw ClientError.InvalidPacket("feedback")
         }
         return result == "ok"
     }
@@ -163,7 +165,7 @@ final public class Client {
     func event_like(track_id: Int, remove: Bool = false) async throws {
         let action = remove ? "remove" : "add-multiple"
         guard let uid = self.account?.uid else {
-            throw ClientError.UndefinedValue
+            throw ClientError.UndefinedValue("account.uid")
         }
         let _ = try await session.post(
             "/users/\(uid)/likes/tracks/\(action)",
@@ -174,11 +176,77 @@ final public class Client {
     func event_dislike(track_id: Int, remove: Bool = false) async throws {
         let action = remove ? "remove" : "add-multiple"
         guard let uid = self.account?.uid else {
-            throw ClientError.UndefinedValue
+            throw ClientError.UndefinedValue("account.uid")
         }
         let _ = try await session.post(
             "/users/\(uid)/dislikes/tracks/\(action)",
             json: ["track-ids": track_id]
         )
     }
+    
+    func get_lyrics(track_id: Int) async throws -> String {
+        let packet = try await session.get("/tracks/\(track_id)/supplement",
+                                           packet: LyricsPacket.self)
+        return packet.result.lyrics.fullLyrics
+    }
+    
+    func event_play_audio(track_id: Int, from_cache: Bool,
+                          play_id: String, duration: Int,
+                          played: Int, album_id: Int
+    ) async throws -> Bool {
+        guard let uid = self.account?.uid else {
+            throw ClientError.UndefinedValue("account.uid")
+        }
+        let response = try await session.post("/play-audio", json: [
+            "track-id": track_id,
+            "from-cache": from_cache,
+            "from": "desktop_win-home-playlist_of_the_day-playlist-default",
+            "play-id": play_id,
+            "uid": uid,
+            "timestamp": Date().ISO8601Format(),
+            "track-length-seconds": duration,
+            "total-played-seconds": played,
+            "end-position-seconds": played,
+            "album-id": album_id,
+            "playlist-id": nil,
+            "client-now": Date().ISO8601Format(),
+        ])
+        guard let result = String(data: response, encoding: .utf8) else {
+            throw ClientError.InvalidPacket("play-audio")
+        }
+        return result == "ok"
+    }
+    
+    func download(track_id: Int, filename: String) async throws {
+        let packet = try await self.session.get("/tracks/\(track_id)/download-info",
+                                              packet: DownloadInfoPacket.self)
+        var br = 0
+        var info: DownloadInfoPacket.Info?
+        for di in packet.result {
+            if di.codec == "mp3" {
+                if di.bitrateInKbps > br {
+                    info = di
+                    br = di.bitrateInKbps
+                }
+            }
+        }
+        guard let info = info else {
+            throw ClientError.InvalidDownloadInfo
+        }
+        
+        let response = try await self.session.get(info.downloadInfoUrl)
+        
+        let xml = DownloadInfoXmlPacket(data: response)
+        let src = "XGRlBW9FXlekgbPrRHuSiA" + String(xml.path.dropFirst()) + xml.s
+        guard let data = src.data(using: .utf8) else {
+            throw ClientError.DataError
+        }
+        let sign = Insecure.MD5
+            .hash(data: data)
+            .map {String(format: "%02hhx", $0)}
+            .joined()
+        let file = try await self.session.get("https://\(xml.host)/get-mp3/\(sign)/\(xml.ts)/\(xml.path)")
+        try file.write(to: URL(filePath: filename))
+    }
 }
+
