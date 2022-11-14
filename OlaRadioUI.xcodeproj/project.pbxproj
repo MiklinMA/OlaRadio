@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09C78A6A292159DE00811B15 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C78A69292159DE00811B15 /* Player.swift */; };
+		09C78A6C29215A2900811B15 /* UIControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C78A6B29215A2900811B15 /* UIControls.swift */; };
+		09C78A7229219D9000811B15 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C78A7129219D9000811B15 /* Track.swift */; };
+		09C78A7429219DD800811B15 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C78A7329219DD800811B15 /* Client.swift */; };
+		09C78A762921EE9600811B15 /* Packets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C78A752921EE9600811B15 /* Packets.swift */; };
 		09CC6998291F370400CC9245 /* OlaRadioUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC6997291F370400CC9245 /* OlaRadioUIApp.swift */; };
 		09CC699A291F370400CC9245 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC6999291F370400CC9245 /* ContentView.swift */; };
 		09CC699C291F370400CC9245 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09CC699B291F370400CC9245 /* Assets.xcassets */; };
@@ -14,6 +19,7 @@
 		09CC69AA291F370400CC9245 /* OlaRadioUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC69A9291F370400CC9245 /* OlaRadioUITests.swift */; };
 		09CC69B4291F370400CC9245 /* OlaRadioUIUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC69B3291F370400CC9245 /* OlaRadioUIUITests.swift */; };
 		09CC69B6291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC69B5291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift */; };
+		09CC69C6291F3B5C00CC9245 /* song.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 09CC69C5291F3B5C00CC9245 /* song.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +40,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		09C78A69292159DE00811B15 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		09C78A6B29215A2900811B15 /* UIControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIControls.swift; sourceTree = "<group>"; };
+		09C78A6D29215B0400811B15 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		09C78A7129219D9000811B15 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
+		09C78A7329219DD800811B15 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		09C78A752921EE9600811B15 /* Packets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Packets.swift; sourceTree = "<group>"; };
 		09CC6994291F370400CC9245 /* OlaRadioUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OlaRadioUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09CC6997291F370400CC9245 /* OlaRadioUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaRadioUIApp.swift; sourceTree = "<group>"; };
 		09CC6999291F370400CC9245 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -45,6 +57,7 @@
 		09CC69AF291F370400CC9245 /* OlaRadioUIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OlaRadioUIUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		09CC69B3291F370400CC9245 /* OlaRadioUIUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaRadioUIUITests.swift; sourceTree = "<group>"; };
 		09CC69B5291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaRadioUIUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		09CC69C5291F3B5C00CC9245 /* song.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,9 +85,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		09C78A7029219D8000811B15 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				09C78A7129219D9000811B15 /* Track.swift */,
+				09C78A7329219DD800811B15 /* Client.swift */,
+				09C78A752921EE9600811B15 /* Packets.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		09CC698B291F370300CC9245 = {
 			isa = PBXGroup;
 			children = (
+				09C78A6D29215B0400811B15 /* MyPlayground.playground */,
 				09CC6996291F370400CC9245 /* OlaRadioUI */,
 				09CC69A8291F370400CC9245 /* OlaRadioUITests */,
 				09CC69B2291F370400CC9245 /* OlaRadioUIUITests */,
@@ -95,11 +119,15 @@
 		09CC6996291F370400CC9245 /* OlaRadioUI */ = {
 			isa = PBXGroup;
 			children = (
+				09C78A7029219D8000811B15 /* Models */,
+				09CC69C5291F3B5C00CC9245 /* song.mp3 */,
 				09CC6997291F370400CC9245 /* OlaRadioUIApp.swift */,
 				09CC6999291F370400CC9245 /* ContentView.swift */,
+				09C78A6B29215A2900811B15 /* UIControls.swift */,
 				09CC699B291F370400CC9245 /* Assets.xcassets */,
 				09CC69A0291F370400CC9245 /* OlaRadioUI.entitlements */,
 				09CC699D291F370400CC9245 /* Preview Content */,
+				09C78A69292159DE00811B15 /* Player.swift */,
 			);
 			path = OlaRadioUI;
 			sourceTree = "<group>";
@@ -145,6 +173,8 @@
 			dependencies = (
 			);
 			name = OlaRadioUI;
+			packageProductDependencies = (
+			);
 			productName = OlaRadioUI;
 			productReference = 09CC6994291F370400CC9245 /* OlaRadioUI.app */;
 			productType = "com.apple.product-type.application";
@@ -217,6 +247,8 @@
 				Base,
 			);
 			mainGroup = 09CC698B291F370300CC9245;
+			packageReferences = (
+			);
 			productRefGroup = 09CC6995291F370400CC9245 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -235,6 +267,7 @@
 			files = (
 				09CC699F291F370400CC9245 /* Preview Assets.xcassets in Resources */,
 				09CC699C291F370400CC9245 /* Assets.xcassets in Resources */,
+				09CC69C6291F3B5C00CC9245 /* song.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,7 +293,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				09CC699A291F370400CC9245 /* ContentView.swift in Sources */,
+				09C78A7429219DD800811B15 /* Client.swift in Sources */,
+				09C78A6C29215A2900811B15 /* UIControls.swift in Sources */,
+				09C78A6A292159DE00811B15 /* Player.swift in Sources */,
+				09C78A762921EE9600811B15 /* Packets.swift in Sources */,
 				09CC6998291F370400CC9245 /* OlaRadioUIApp.swift in Sources */,
+				09C78A7229219D9000811B15 /* Track.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
