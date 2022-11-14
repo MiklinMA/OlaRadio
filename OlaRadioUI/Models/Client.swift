@@ -40,7 +40,7 @@ struct Session {
         if !json.isEmpty {
             request.httpBody = try? JSONSerialization.data(withJSONObject: json)
         }
-        print(method, url, json)
+        print(method, url, json.isEmpty ? "" : json)
         let (data, _) = try await session.data(for: request)
         return data
     }
@@ -144,25 +144,25 @@ final public class Client {
         return try await feedback(type: "radioStarted", json: ["from": self.from])
     }
     
-    func event_track_started(track_id: Int) async throws -> Bool {
+    func event_track_started(track_id: String) async throws -> Bool {
         return try await feedback(type: "trackStarted", json: ["trackId": track_id])
     }
     
-    func event_track_finished(track_id: Int, played: Int) async throws -> Bool {
+    func event_track_finished(track_id: String, played: Int) async throws -> Bool {
         return try await feedback(type: "trackStarted", json: [
             "trackId": track_id,
             "totalPlayedSeconds": played
         ])
     }
     
-    func event_track_skip(track_id: Int, played: Int) async throws -> Bool {
+    func event_track_skip(track_id: String, played: Int) async throws -> Bool {
         return try await feedback(type: "skip", json: [
             "trackId": track_id,
             "totalPlayedSeconds": played
         ])
     }
     
-    func event_like(track_id: Int, remove: Bool = false) async throws {
+    func event_like(track_id: String, remove: Bool = false) async throws {
         let action = remove ? "remove" : "add-multiple"
         guard let uid = self.account?.uid else {
             throw ClientError.UndefinedValue("account.uid")
@@ -173,7 +173,7 @@ final public class Client {
         )
     }
     
-    func event_dislike(track_id: Int, remove: Bool = false) async throws {
+    func event_dislike(track_id: String, remove: Bool = false) async throws {
         let action = remove ? "remove" : "add-multiple"
         guard let uid = self.account?.uid else {
             throw ClientError.UndefinedValue("account.uid")
@@ -184,13 +184,13 @@ final public class Client {
         )
     }
     
-    func get_lyrics(track_id: Int) async throws -> String {
+    func get_lyrics(track_id: String) async throws -> String {
         let packet = try await session.get("/tracks/\(track_id)/supplement",
                                            packet: LyricsPacket.self)
         return packet.result.lyrics.fullLyrics
     }
     
-    func event_play_audio(track_id: Int, from_cache: Bool,
+    func event_play_audio(track_id: String, from_cache: Bool,
                           play_id: String, duration: Int,
                           played: Int, album_id: Int
     ) async throws -> Bool {
@@ -217,7 +217,7 @@ final public class Client {
         return result == "ok"
     }
     
-    func download(track_id: Int, filename: String) async throws {
+    func download(track_id: String, filename: String) async throws {
         let packet = try await self.session.get("/tracks/\(track_id)/download-info",
                                               packet: DownloadInfoPacket.self)
         var br = 0

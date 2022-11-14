@@ -20,6 +20,7 @@
 		09CC69B4291F370400CC9245 /* OlaRadioUIUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC69B3291F370400CC9245 /* OlaRadioUIUITests.swift */; };
 		09CC69B6291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC69B5291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift */; };
 		09CC69C6291F3B5C00CC9245 /* song.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 09CC69C5291F3B5C00CC9245 /* song.mp3 */; };
+		09E396AC292261BD00822725 /* Station.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E396AB292261BD00822725 /* Station.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		09CC69B3291F370400CC9245 /* OlaRadioUIUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaRadioUIUITests.swift; sourceTree = "<group>"; };
 		09CC69B5291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaRadioUIUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		09CC69C5291F3B5C00CC9245 /* song.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song.mp3; sourceTree = "<group>"; };
+		09E396AB292261BD00822725 /* Station.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Station.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 				09C78A7129219D9000811B15 /* Track.swift */,
 				09C78A7329219DD800811B15 /* Client.swift */,
 				09C78A752921EE9600811B15 /* Packets.swift */,
+				09E396AB292261BD00822725 /* Station.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -294,6 +297,7 @@
 			files = (
 				09CC699A291F370400CC9245 /* ContentView.swift in Sources */,
 				09C78A7429219DD800811B15 /* Client.swift in Sources */,
+				09E396AC292261BD00822725 /* Station.swift in Sources */,
 				09C78A6C29215A2900811B15 /* UIControls.swift in Sources */,
 				09C78A6A292159DE00811B15 /* Player.swift in Sources */,
 				09C78A762921EE9600811B15 /* Packets.swift in Sources */,
