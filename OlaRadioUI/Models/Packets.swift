@@ -7,6 +7,25 @@
 
 import Foundation
 
+struct ErrorPacket: Codable {
+    let name: String
+    let message: String
+}
+
+struct BasePacket: Codable {
+    var result: String?
+    var error: ErrorPacket?
+}
+
+public struct LikePacket: Codable {
+    let result: Result?
+    var error: ErrorPacket?
+
+    public struct Result: Codable {
+        let revision: Int?
+    }
+}
+
 public struct StatusPacket: Codable {
     let result: Result
 

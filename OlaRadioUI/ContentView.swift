@@ -9,6 +9,8 @@ import SwiftUI
 
 
 struct ContentView: View {
+    @ObservedObject var player: Player = Player()
+    
     var body: some View {
         VStack {
             ArtworkPreview()
@@ -16,8 +18,12 @@ struct ContentView: View {
             LyricsBrowser()
             Spacer()
         }
-        .padding()
+        .padding(.vertical)
         .frame(maxWidth: 300)
+        .environmentObject(player)
+        .alert(isPresented: $player.is_error) {
+            Alert(title: Text(player.error_message ?? "Unknown error"))
+        }
     }
 }
 

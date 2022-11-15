@@ -8,13 +8,7 @@
 import Foundation
 
 
-let CACHE_DIR = (
-    ProcessInfo.processInfo.environment["YANDEX_CACHE_DIR"] ??
-    ProcessInfo.processInfo.environment["TMPDIR"] ??
-    "/tmp"
-)
-
-final public class Track {
+final public class Track: ObservableObject {
     let packet: TrackPacket
     let station: Station
     
@@ -22,8 +16,14 @@ final public class Track {
     let title: String
     var liked = false
     var cached = false
-    private var _lyrics: String? = nil
+    @Published private var _lyrics: String? = nil
     private var _lyrics_available: Bool = false
+    var task: Task<(), any Error>?
+    var cache: String {
+        UserDefaults.standard.string(forKey: "cache") ??
+        ProcessInfo.processInfo.environment["TMPDIR"] ??
+        "/tmp"
+    }
     
     let play_id = String(
         format: "%d-%d-%d",
@@ -35,20 +35,31 @@ final public class Track {
     var album_id: Int { packet.albums.first!.id }
     var artist: String { packet.artists.first!.name }
     var name: String { "\(artist) - \(title)".replacingOccurrences(of: "/", with: "") }
-    var path: String { "\(CACHE_DIR)/\(name).mp3" }
+    var path: String { "\(cache)/\(name).mp3" }
     var artwork: String { "https://\(packet.coverUri.replacingOccurrences(of: "%%", with: "200x200"))" }
+    private static let sessionProcessingQueue = DispatchQueue(label: "SessionProcessingQueue")
     
     var duration: Int { packet.durationMs / 1000 }
     var position: Int = 0
     var exists: Bool {
         FileManager.default.fileExists(atPath: path)
     }
+
     var lyrics: String? {
-        get async throws {
+        get {
             if (_lyrics == nil && _lyrics_available) {
-                _lyrics = try await station.client.get_lyrics(track_id: id)
+                Task { try await get_lyrics() }
             }
             return _lyrics
+        }
+        set {
+            _lyrics = newValue
+        }
+    }
+    func get_lyrics() async throws {
+        let lyrics = try await station.client.get_lyrics(track_id: id)
+        DispatchQueue.main.sync {
+            self.lyrics = lyrics
         }
     }
     
@@ -71,63 +82,28 @@ final public class Track {
             )
             try await station.client.download(track_id: id, filename: path)
         }
-            
+        
         // self.__reload_tags()
     }
     
     func trace() async throws {
         try await station.event_track_trace(track: self)
     }
-
+    
     func skip() async throws {
         try await station.event_track_skip(track: self)
     }
-
+    
     func like() async throws {
         try await station.event_track_like(track: self, remove: liked)
+        DispatchQueue.main.sync {
+            self.liked.toggle()
+        }
     }
-
+    
     func dislike() async throws {
         try await station.event_track_dislike(track: self)
         try FileManager.default.removeItem(atPath: path)
     }
-    
-    /*
-     def __reload_tags(self):
-         if not self.exists:
-             return
-         try:
-             tags = id3.ID3(self.path)
-         except id3.ID3NoHeaderError:
-             tags = id3.ID3()
-
-         changed = False
-
-         if not tags.get('TIT2'):
-             tags.add(id3.TIT2(encoding=3, text=self.title))
-             tags.add(id3.TALB(encoding=3, text=self.album))
-             tags.add(id3.TPE1(encoding=3, text=self.artist))
-             changed = True
-
-         if tags.get('USLT::eng'):
-             self._lyrics = tags['USLT::eng'].text
-         elif self.lyrics is not None:
-             tags.add(id3.USLT(encoding=3, lang='eng', text=self.lyrics))
-             changed = True
-
-         if not tags.get('APIC'):
-             art = urllib.request.urlopen(self.artwork)
-             tags.add(id3.APIC(
-                 encoding=0,
-                 mime=art.headers['Content-Type'],
-                 type=3,  # cover front
-                 data=art.read(),
-             ))
-             changed = True
-
-         if changed:
-             tags.save(self.path)
-
-     */
 }
 

@@ -11,11 +11,12 @@ import Foundation
 final public class Station {
     let client: Client
     let id: String
+    var tracks: [TrackPacket] = []
     var current_track: Track? = nil
     var next_track: Track? = nil
     
-    init(token: String, station_id: String) async throws {
-        client = try await Client(token)
+    init(token: String, station_id: String) {
+        client = Client(token)
         id = station_id
     }
     
@@ -23,7 +24,7 @@ final public class Station {
         guard let track = track ?? current_track else {
             throw ClientError.UndefinedValue("track")
         }
-        let _ = try await client.event_play_audio(
+        try await client.event_play_audio(
             track_id: track.id,
             from_cache: track.cached,
             play_id: track.play_id,
@@ -38,58 +39,55 @@ final public class Station {
         guard let track = track ?? current_track else {
             throw ClientError.UndefinedValue("track")
         }
-        let _ = try await client.event_track_skip(track_id: track.id, played: track.position)
+        try await client.event_track_skip(track_id: track.id, played: track.position)
     }
     
     func event_track_like(track: Track? = nil, remove: Bool = false) async throws {
         guard let track = track ?? current_track else {
             throw ClientError.UndefinedValue("track")
         }
-        let _ = try await client.event_like(track_id: track.id, remove: remove)
+        try await client.event_like(track_id: track.id, remove: remove)
     }
     
     func event_track_dislike(track: Track? = nil, remove: Bool = false) async throws {
         guard let track = track ?? current_track else {
             throw ClientError.UndefinedValue("track")
         }
-        let _ = try await client.event_dislike(track_id: track.id, remove: remove)
+        try await client.event_like(track_id: track.id, remove: remove, dislike: true)
     }
     
-    func tracks(closure: (_ track: Track) async throws -> Bool) async throws {
-        while true {
-            var tracks = try await client.get_tracks(trackId: current_track?.id)
-            
-            if current_track == nil {
-                let _ = try await client.event_radio_started()
-                current_track = Track(tracks.removeFirst(), self)
-                try await current_track?.download()
-            }
-            guard let current_track = current_track else {
-                throw ClientError.UndefinedValue("current_track")
-            }
-            
-            for track in tracks {
-                next_track = Track(track, self)
-                guard let next_track = next_track else {
-                    throw ClientError.UndefinedValue("next_track")
-                }
-                
-                try await event_track_trace(track: current_track)
-                let _ = try await client.event_track_started(track_id: current_track.id)
-                
-                let t = Task { try await next_track.download() }
-                
-                if try await closure(current_track) == false {
-                    return
-                }
-                
-                try await event_track_trace(track: current_track)
-                let _ = try await client.event_track_finished(track_id: current_track.id, played: current_track.duration)
-                
-                let _ = await t.result
-                
-                self.current_track = next_track
-            }
+    func get_track_packet() async throws -> TrackPacket {
+        if tracks.isEmpty { tracks = try await client.get_tracks(trackId: current_track?.id) }
+        return tracks.removeFirst()
+    }
+    
+    func get_track() async throws -> Track {
+        if next_track == nil {
+            let track = Track(try await get_track_packet(), self)
+            track.task = Task { try await track.download() }
+            current_track = track
+
+            let _ = try await client.event_radio_started()
+        } else {
+            try await event_track_trace(track: current_track)
+            let _ = try await client.event_track_finished(
+                track_id: current_track!.id,
+                played: current_track!.duration
+            )
+            current_track = next_track
         }
+
+        let next_track = Track(try await get_track_packet(), self)
+        next_track.task = Task { try await next_track.download() }
+        self.next_track = next_track
+
+        guard let current_track = self.current_track else {
+            throw ClientError.UndefinedValue("current_track")
+        }
+
+        try await event_track_trace(track: current_track)
+        let _ = try await client.event_track_started(track_id: current_track.id)
+
+        return current_track
     }
 }

@@ -9,48 +9,56 @@ import SwiftUI
 
 
 struct PlayControls: View {
-    @Namespace var ns
-    @StateObject var player: Player = Player()
-    @State var title = "Song title"
+    // @Namespace var ns
+    @EnvironmentObject var player: Player
     
     private let bsz: CGFloat = 40
     private let bpd: CGFloat = 5
-
+    
+    private var disabled: Bool {
+        player.track == nil || player.is_error
+    }
+    
     var body: some View {
         ZStack {
             VStack {
-                Text(title).padding(bpd).font(.title2)
+                Text(player.track?.name ?? "").padding(bpd).font(.title3)
 
                 HStack {
                     Spacer()
 
                     Button(action: {
-                        player.next_track()
+                        player.like()
                     }) {
                         Image(systemName: (
                             "heart.circle.fill"
                         )).resizable()
                             .frame(width: bsz, height: bsz)
                             .aspectRatio(contentMode: .fit)
+                            .foregroundColor(player.track?.liked ?? false ? .red : .primary)
                     }
                     .buttonStyle(PlainButtonStyle())
                     .padding(bpd)
+                    .disabled(disabled)
 
                     Button(action: {
-                        player.play_toggle()
+                        player.toggle()
                     }) {
                         Image(systemName: (
-                            player.playing ? "pause.circle.fill" : "play.circle.fill"
+                            player.playing
+                            ? "pause.circle.fill"
+                            : "play.circle.fill"
                         )).resizable()
                             .frame(width: bsz, height: bsz)
                             .aspectRatio(contentMode: .fit)
                     }
                     .buttonStyle(PlainButtonStyle())
                     .padding(bpd)
-                    .prefersDefaultFocus(true, in: ns)
+                    .disabled(!player.ready)
+                    // .prefersDefaultFocus(true, in: ns)
 
                     Button(action: {
-                        player.next_track()
+                        player.skip()
                     }) {
                         Image(systemName: (
                             "forward.circle.fill"
@@ -60,9 +68,11 @@ struct PlayControls: View {
                     }
                     .buttonStyle(PlainButtonStyle())
                     .padding(bpd)
+                    .disabled(disabled)
+
 
                     Button(action: {
-                        player.next_track()
+                        player.dislike()
                     }) {
                         Image(systemName: (
                             "heart.slash.circle.fill"
@@ -72,33 +82,50 @@ struct PlayControls: View {
                     }
                     .buttonStyle(PlainButtonStyle())
                     .padding(bpd)
+                    .disabled(disabled)
 
                     Spacer()
 
                 }
             }
         }
-        .environmentObject(player)
-        .focusScope(ns)
+        // .focusScope(ns)
     }
 }
 
 struct LyricsBrowser: View {
-    @State var text = "Lyrics will be here"
+    @EnvironmentObject var player: Player
+    var lyrics: String {
+        if let track = player.track {
+            return track.lyrics ?? "No lyrics..."
+        }
+        return ""
+    }
 
     var body: some View {
-        Text(text)
-            .frame(minHeight: 50)
+        ScrollView {
+            Text(lyrics)
+                .frame(minHeight: 50)
+                .font(.system(size: 11))
+        }
+        .padding(.horizontal, 7)
     }
 }
 
 struct ArtworkPreview: View {
+    @EnvironmentObject var player: Player
+    
     var body: some View {
-        Image(systemName: (
-            "heart.circle.fill"
-        )).resizable()
-            .frame(width: 200, height: 200)
-            .aspectRatio(contentMode: .fit)
+        if player.track?.artwork == nil {
+            Image(systemName: "heart.circle.fill")
+                .resizable()
+                .frame(width: 200, height: 200)
+                .aspectRatio(contentMode: .fit)
+        } else {
+            AsyncImage(url: URL(string: player.track!.artwork))
+                .frame(width: 200, height: 200)
+                .aspectRatio(contentMode: .fit)
+        }
     }
 }
 
