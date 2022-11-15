@@ -13,5 +13,9 @@ struct OlaRadioUIApp: App {
         WindowGroup {
             ContentView()
         }
+        
+        Settings {
+            SettingsView()
+        }
     }
 }
