@@ -7,10 +7,9 @@
 
 import SwiftUI
 
-
 struct ContentView: View {
     @ObservedObject var player: Player = Player()
-    
+
     var body: some View {
         VStack {
             ArtworkPreview()

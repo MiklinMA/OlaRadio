@@ -7,18 +7,17 @@
 
 import SwiftUI
 
-
 struct PlayControls: View {
     // @Namespace var ns
     @EnvironmentObject var player: Player
-    
+
     private let bsz: CGFloat = 40
     private let bpd: CGFloat = 5
-    
+
     private var disabled: Bool {
         player.track == nil || player.is_error
     }
-    
+
     var body: some View {
         ZStack {
             VStack {
@@ -30,9 +29,7 @@ struct PlayControls: View {
                     Button(action: {
                         player.like()
                     }) {
-                        Image(systemName: (
-                            "heart.circle.fill"
-                        )).resizable()
+                        Image(systemName: ("heart.circle.fill")).resizable()
                             .frame(width: bsz, height: bsz)
                             .aspectRatio(contentMode: .fit)
                             .foregroundColor(player.track?.liked ?? false ? .red : .primary)
@@ -44,11 +41,11 @@ struct PlayControls: View {
                     Button(action: {
                         player.toggle()
                     }) {
-                        Image(systemName: (
-                            player.playing
-                            ? "pause.circle.fill"
-                            : "play.circle.fill"
-                        )).resizable()
+                        Image(
+                            systemName: (player.playing
+                                ? "pause.circle.fill"
+                                : "play.circle.fill")
+                        ).resizable()
                             .frame(width: bsz, height: bsz)
                             .aspectRatio(contentMode: .fit)
                     }
@@ -60,9 +57,7 @@ struct PlayControls: View {
                     Button(action: {
                         player.skip()
                     }) {
-                        Image(systemName: (
-                            "forward.circle.fill"
-                        )).resizable()
+                        Image(systemName: ("forward.circle.fill")).resizable()
                             .frame(width: bsz, height: bsz)
                             .aspectRatio(contentMode: .fit)
                     }
@@ -70,13 +65,10 @@ struct PlayControls: View {
                     .padding(bpd)
                     .disabled(disabled)
 
-
                     Button(action: {
                         player.dislike()
                     }) {
-                        Image(systemName: (
-                            "heart.slash.circle.fill"
-                        )).resizable()
+                        Image(systemName: ("heart.slash.circle.fill")).resizable()
                             .frame(width: bsz, height: bsz)
                             .aspectRatio(contentMode: .fit)
                     }
@@ -114,7 +106,7 @@ struct LyricsBrowser: View {
 
 struct ArtworkPreview: View {
     @EnvironmentObject var player: Player
-    
+
     var body: some View {
         if player.track?.artwork == nil {
             Image(systemName: "heart.circle.fill")
@@ -128,4 +120,3 @@ struct ArtworkPreview: View {
         }
     }
 }
-

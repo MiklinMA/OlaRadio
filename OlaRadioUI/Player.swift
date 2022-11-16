@@ -5,9 +5,9 @@
 //  Created by Mike Miklin on 13.11.2022.
 //
 
-import Foundation
 import AVKit
 import Combine
+import Foundation
 
 enum PlayerError: Error {
     case NoToken
@@ -23,17 +23,21 @@ class Player: NSObject, ObservableObject {
     @Published var error_message: String?
     @Published var is_error: Bool = false
     @Published var station: Station?
-    
-    private var token: String? = UserDefaults.standard.string(forKey: "token")
-    private var station_id: String = UserDefaults.standard.string(forKey: "station") ?? "user:onyourwave"
-    
+
+    private var token: String? {
+        UserDefaults.standard.string(forKey: "token")
+    }
+    private var station_id: String {
+        UserDefaults.standard.string(forKey: "station") ?? "user:onyourwave"
+    }
+
     private var player: AVAudioPlayer!
     private var url: URL!
     private var stationBinding: AnyCancellable? = nil
     private var trackBinding: AnyCancellable? = nil
-    
+
     // private var queue = DispatchQueue(label: "ru.olasoft.olaradio.player")
-    
+
     override init() {
         super.init()
         guard let token = token else {
@@ -47,7 +51,7 @@ class Player: NSObject, ObservableObject {
         self.station = station
         self.station = station
     }
-    
+
     func show_error(_ message: String) {
         DispatchQueue.main.sync {
             self.error_message = message
@@ -57,7 +61,7 @@ class Player: NSObject, ObservableObject {
     func show_error(_ error: Error) {
         show_error(error.localizedDescription)
     }
-    
+
     var ready: Bool {
         station != nil && station!.client.ready
     }
@@ -71,7 +75,7 @@ class Player: NSObject, ObservableObject {
         guard let player = player else { return -1 }
         return Int(player.currentTime)
     }
-    
+
     func play() {
         guard ready else { return }
         guard let player = player else {
@@ -86,9 +90,8 @@ class Player: NSObject, ObservableObject {
         Task {
             guard let track = track else { return }
             track.position = position
-            
-            do { try await track.skip() }
-            catch {
+
+            do { try await track.skip() } catch {
                 self.show_error(error)
             }
             load_track()
@@ -102,8 +105,7 @@ class Player: NSObject, ObservableObject {
                 DispatchQueue.main.sync {
                     self.track = track
                 }
-            }
-            catch {
+            } catch {
                 self.show_error(error)
             }
         }
@@ -111,8 +113,7 @@ class Player: NSObject, ObservableObject {
     func dislike() {
         Task {
             guard let track = track else { return }
-            do { try await track.dislike() }
-            catch {
+            do { try await track.dislike() } catch {
                 self.show_error(error)
             }
             skip()
@@ -124,7 +125,7 @@ class Player: NSObject, ObservableObject {
             guard ready else { return }
             if playing { player?.stop() }
             if let url = url { url.stopAccessingSecurityScopedResource() }
-            
+
             do {
                 guard let station = station else {
                     throw PlayerError.NoStation
@@ -140,7 +141,7 @@ class Player: NSObject, ObservableObject {
                 let player = try AVAudioPlayer(contentsOf: url)
                 player.delegate = self
                 player.play()
-                
+
                 DispatchQueue.main.sync {
                     self.player = player
                     self.track = track
@@ -155,7 +156,6 @@ class Player: NSObject, ObservableObject {
     }
 }
 
-
 extension Player: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if let track = track {
@@ -166,4 +166,3 @@ extension Player: AVAudioPlayerDelegate {
         load_track()
     }
 }
-

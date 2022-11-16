@@ -13,9 +13,7 @@ struct GeneralSettingsView: View {
     @AppStorage("token") private var token: String = ""
     @AppStorage("cache") private var cache: String = DEFAULT_CACHE
     @AppStorage("station") private var station: String = "user:onyourwave"
-    
-    @State var showFileChooser = false
-    
+
     var body: some View {
         Form {
             TextField("Yandex-Music Token:", text: $token)
@@ -45,13 +43,15 @@ struct SettingsView: View {
     }
     var body: some View {
         GeneralSettingsView()
-//        TabView {
-//            GeneralSettingsView()
-//                .tabItem {
-//                    Label("General", systemImage: "gear")
-//                }
-//                .tag(Tabs.general)
-//        }
+        /*
+        TabView {
+            GeneralSettingsView()
+                .tabItem {
+                    Label("General", systemImage: "gear")
+                }
+                .tag(Tabs.general)
+        }
+        */
     }
 }
 
