@@ -7,6 +7,7 @@
 
 import CryptoKit
 import Foundation
+import _StringProcessing
 
 enum ClientError: LocalizedError {
     case invalidUrl(String)
@@ -302,6 +303,9 @@ final public class Client: ObservableObject {
     }
 
     func download(trackId: String, filename: String) async throws {
+        guard let url = URL(string: filename) else {
+            throw ClientError.invalidUrl(filename)
+        }
         let packet = try await self.session.get(
             "/tracks/\(trackId)/download-info",
             packet: DownloadInfoPacket.self)
@@ -332,6 +336,7 @@ final public class Client: ObservableObject {
             .joined()
         let file = try await self.session.get(
             "https://\(xml.host)/get-mp3/\(sign)/\(xml.ts)\(xml.path)")
-        try file.write(to: URL(filePath: filename))
+
+        try file.write(to: url)
     }
 }

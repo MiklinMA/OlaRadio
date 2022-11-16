@@ -13,6 +13,7 @@ enum PlayerError: Error {
     case noAccess
     case noStation
     case taskError
+    case invalidPath
 }
 
 class Player: NSObject, ObservableObject {
@@ -130,7 +131,9 @@ class Player: NSObject, ObservableObject {
                 let track = try await station.getTrack()
                 try await track.task?.value  // wait for downloading
 
-                url = URL(filePath: track.path)
+                guard let url = URL(string: track.path) else {
+                    throw PlayerError.invalidPath
+                }
                 guard url.startAccessingSecurityScopedResource() else {
                     throw PlayerError.noAccess
                 }
@@ -141,6 +144,8 @@ class Player: NSObject, ObservableObject {
                 DispatchQueue.main.sync {
                     self.player = player
                     self.track = track
+                    self.url = url
+
                     trackBinding = track.objectWillChange.sink { [weak self] _ in
                         self?.objectWillChange.send()
                     }
