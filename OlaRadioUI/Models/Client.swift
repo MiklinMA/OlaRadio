@@ -7,7 +7,6 @@
 
 import CryptoKit
 import Foundation
-import _StringProcessing
 
 enum ClientError: LocalizedError {
     case invalidUrl(String)
@@ -97,7 +96,7 @@ class Session {
         data: [String: Any?],
         json: Bool = false
     ) async throws -> Data {
-        let urls = path.starts(with: try Regex("^http(s*)://")) ? path : "\(baseUrl)\(path)"
+        let urls = path.hasPrefix("/") ? "\(baseUrl)\(path)" : path
         guard var urlc = URLComponents(string: urls) else { throw ClientError.invalidUrl(urls) }
         for param in params {
             urlc.queryItems?.append(
@@ -303,9 +302,6 @@ final public class Client: ObservableObject {
     }
 
     func download(trackId: String, filename: String) async throws {
-        guard let url = URL(string: filename) else {
-            throw ClientError.invalidUrl(filename)
-        }
         let packet = try await self.session.get(
             "/tracks/\(trackId)/download-info",
             packet: DownloadInfoPacket.self)
@@ -337,6 +333,6 @@ final public class Client: ObservableObject {
         let file = try await self.session.get(
             "https://\(xml.host)/get-mp3/\(sign)/\(xml.ts)\(xml.path)")
 
-        try file.write(to: url)
+        try file.write(to: NSURL.fileURL(withPath: filename))
     }
 }

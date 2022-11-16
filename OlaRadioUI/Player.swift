@@ -9,11 +9,24 @@ import AVKit
 import Combine
 import Foundation
 
-enum PlayerError: Error {
+enum PlayerError: LocalizedError {
     case noAccess
     case noStation
     case taskError
-    case invalidPath
+    case invalidPath(String)
+
+    var errorDescription: String? {
+        switch self {
+        case .noAccess:
+            return NSLocalizedString("No access:", comment: "no access")
+        case .noStation:
+            return NSLocalizedString("No station:", comment: "no station")
+        case .taskError:
+            return NSLocalizedString("Task error:", comment: "task error")
+        case .invalidPath(let path):
+            return NSLocalizedString("Invalid path: \(path)", comment: "invalid path")
+        }
+    }
 }
 
 class Player: NSObject, ObservableObject {
@@ -131,9 +144,7 @@ class Player: NSObject, ObservableObject {
                 let track = try await station.getTrack()
                 try await track.task?.value  // wait for downloading
 
-                guard let url = URL(string: track.path) else {
-                    throw PlayerError.invalidPath
-                }
+                url = NSURL.fileURL(withPath: track.path)
                 guard url.startAccessingSecurityScopedResource() else {
                     throw PlayerError.noAccess
                 }
@@ -144,7 +155,6 @@ class Player: NSObject, ObservableObject {
                 DispatchQueue.main.sync {
                     self.player = player
                     self.track = track
-                    self.url = url
 
                     trackBinding = track.objectWillChange.sink { [weak self] _ in
                         self?.objectWillChange.send()
