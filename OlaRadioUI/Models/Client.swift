@@ -86,7 +86,7 @@ class Session {
                       data: [String:Any?],
                       json: Bool = false
     ) async throws -> Data {
-        let urls = path.starts(with: /^http(s*):\/\//) ? path : "\(base_url)\(path)"
+        let urls = path.starts(with: try Regex("^http(s*)://")) ? path : "\(base_url)\(path)"
         guard var urlc = URLComponents(string: urls) else { throw ClientError.InvalidURL(urls) }
         for param in params {
             urlc.queryItems?.append(URLQueryItem(name: param.key, value: String(describing: param.value)))
