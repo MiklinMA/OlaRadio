@@ -1,3 +1,2 @@
-yandex-music
 pygame
 mutagen
