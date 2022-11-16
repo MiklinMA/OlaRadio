@@ -83,12 +83,14 @@ class Track:
             tags.add(id3.TIT2(encoding=3, text=self.title))
             tags.add(id3.TALB(encoding=3, text=self.album))
             tags.add(id3.TPE1(encoding=3, text=self.artist))
+            print("Title changed")
             changed = True
 
         if tags.get('USLT::eng'):
             self._lyrics = tags['USLT::eng'].text
         elif self.lyrics is not None:
             tags.add(id3.USLT(encoding=3, lang='eng', text=self.lyrics))
+            print("Lyrics changed")
             changed = True
 
         if not tags.get('APIC'):
@@ -99,6 +101,7 @@ class Track:
                 type=3,  # cover front
                 data=art.read(),
             ))
+            print("Artwork changed")
             changed = True
 
         if changed:

@@ -5,10 +5,9 @@ from track import Track
 
 
 class Station:
-    def __init__(self, token, station_id=None, ui_string=None):
+    def __init__(self, token, station_id=None):
         self.client = Client(token, station_id)
         self.id = station_id or 'user:onyourwave'
-        self.ui_string = ui_string or "desktop_win-home-playlist_of_the_day-playlist-default"
 
         self.station = None
         self.current_track = None
@@ -63,7 +62,7 @@ class Station:
 
     def event_track_skip(self, track=None):
         track = track or self.current_track
-        self.client.event_track_finished(
+        self.client.event_track_skip(
             self.current_track.id,
             self.current_track.position,
         )

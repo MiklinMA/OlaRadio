@@ -104,7 +104,7 @@ class Client:
 
     def get_lyrics(self, track_id):
         data = self.session.get(f'/tracks/{track_id}/supplement')
-        return data['lyrics'].get('fullLyrics')
+        return data.get('lyrics', dict()).get('fullLyrics')
 
     def download(self, track_id, filename):
         data = self.session.get(f'/tracks/{track_id}/download-info')
@@ -115,6 +115,7 @@ class Client:
             if di['codec'] == 'mp3':
                 if di['bitrateInKbps'] > br:
                     info = di
+                    br = di['bitrateInKbps']
         if not info:
             raise Exception(f'Download info unavailable')
 
