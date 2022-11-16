@@ -9,30 +9,30 @@ import CryptoKit
 import Foundation
 
 enum ClientError: LocalizedError {
-    case InvalidURL(String)
-    case InvalidPacket(String)
-    case UndefinedValue(String)
-    case InvalidDownloadInfo
-    case DataError
+    case invalidUrl(String)
+    case invalidPacket(String)
+    case undefinedValue(String)
+    case invalidDownloadInfo
+    case dataError
 
     var errorDescription: String? {
         switch self {
-        case .InvalidURL(let url):
+        case .invalidUrl(let url):
             return NSLocalizedString("Invalid URL: \(url)", comment: "invalid url")
-        case .InvalidPacket(let packet):
+        case .invalidPacket(let packet):
             return NSLocalizedString("Invalid packet: \(packet)", comment: "invalid packet")
-        case .UndefinedValue(let value):
+        case .undefinedValue(let value):
             return NSLocalizedString("Undefined value: \(value)", comment: "undefined value")
-        case .InvalidDownloadInfo:
+        case .invalidDownloadInfo:
             return NSLocalizedString("Invalid download info:", comment: "invalid download info")
-        case .DataError:
+        case .dataError:
             return NSLocalizedString("Data error", comment: "data error")
         }
     }
 }
 
 class Session {
-    private let base_url: String = "https://api.music.yandex.net"
+    private let baseUrl: String = "https://api.music.yandex.net"
     private var session = URLSession(configuration: .default)
     private let token: String
 
@@ -96,13 +96,13 @@ class Session {
         data: [String: Any?],
         json: Bool = false
     ) async throws -> Data {
-        let urls = path.starts(with: try Regex("^http(s*)://")) ? path : "\(base_url)\(path)"
-        guard var urlc = URLComponents(string: urls) else { throw ClientError.InvalidURL(urls) }
+        let urls = path.starts(with: try Regex("^http(s*)://")) ? path : "\(baseUrl)\(path)"
+        guard var urlc = URLComponents(string: urls) else { throw ClientError.invalidUrl(urls) }
         for param in params {
             urlc.queryItems?.append(
                 URLQueryItem(name: param.key, value: String(describing: param.value)))
         }
-        guard let url = urlc.url?.absoluteURL else { throw ClientError.InvalidURL(urls) }
+        guard let url = urlc.url?.absoluteURL else { throw ClientError.invalidUrl(urls) }
         return try await call(url: url, method: method, data: data, json: json)
     }
 
@@ -116,7 +116,7 @@ class Session {
         let data = try await get(path, params: params)
 
         guard let packet = try? JSONDecoder().decode(T.self, from: data) else {
-            throw ClientError.InvalidPacket(String(describing: T.self))
+            throw ClientError.invalidPacket(String(describing: T.self))
         }
         return packet
     }
@@ -134,7 +134,7 @@ class Session {
         let data = try await post(path, params: params, data: data, json: json)
 
         guard let packet = try? JSONDecoder().decode(T.self, from: data) else {
-            throw ClientError.InvalidPacket(String(describing: T.self))
+            throw ClientError.invalidPacket(String(describing: T.self))
         }
         return packet
     }
@@ -142,21 +142,21 @@ class Session {
 
 final public class Client: ObservableObject {
     private let session: Session
-    private var batch_id: String?
+    private var batchId: String?
     public let id: String
     @Published var account: StatusPacket.Result.Account?
 
     private var from: String { id.replacingOccurrences(of: ":", with: "-") }
 
-    init(_ token: String, _ station_id: String = "user:onyourwave") {
+    init(_ token: String, _ stationId: String = "user:onyourwave") {
         self.session = Session(token: token)
-        self.id = station_id
+        self.id = stationId
     }
 
     var ready: Bool {
         if account != nil { return true }
         Task {
-            let account = try await self.get_status()
+            let account = try await self.getStatus()
             DispatchQueue.main.sync {
                 self.account = account
             }
@@ -164,14 +164,14 @@ final public class Client: ObservableObject {
         return false
     }
 
-    func get_status() async throws -> StatusPacket.Result.Account {
+    func getStatus() async throws -> StatusPacket.Result.Account {
         let packet = try await session.get(
             "/account/status",
             packet: StatusPacket.self)
         return packet.result.account
     }
 
-    func get_tracks(trackId: String? = nil) async throws -> [TrackPacket] {
+    func getTracks(trackId: String? = nil) async throws -> [TrackPacket] {
         var params: [String: Any] = ["settings2": true]
         if let trackId = trackId {
             params["trackId"] = trackId
@@ -185,13 +185,13 @@ final public class Client: ObservableObject {
             t.track.liked = t.liked
             tracks.append(t.track)
         }
-        self.batch_id = packet.result.batchId
+        self.batchId = packet.result.batchId
         return tracks
     }
 
     func feedback(type: String, json: [String: Any]) async throws {
-        guard let batch_id = self.batch_id else {
-            throw ClientError.UndefinedValue("batch_id")
+        guard let batchId = self.batchId else {
+            throw ClientError.undefinedValue("batchId")
         }
         var data: [String: Any] = [
             "type": type,
@@ -201,77 +201,77 @@ final public class Client: ObservableObject {
 
         let packet = try await session.post(
             "/rotor/station/\(self.id)/feedback",
-            params: ["batch-id": batch_id],
+            params: ["batch-id": batchId],
             data: data,
             json: true,
             packet: BasePacket.self
         )
 
         if let error = packet.error {
-            throw ClientError.InvalidPacket("feedback -> " + error.message)
+            throw ClientError.invalidPacket("feedback -> " + error.message)
         }
     }
 
-    func event_radio_started() async throws {
+    func eventRadioStarted() async throws {
         try await feedback(type: "radioStarted", json: ["from": self.from])
     }
 
-    func event_track_started(track_id: String) async throws {
-        try await feedback(type: "trackStarted", json: ["trackId": track_id])
+    func eventTrackStarted(trackId: String) async throws {
+        try await feedback(type: "trackStarted", json: ["trackId": trackId])
     }
 
-    func event_track_finished(track_id: String, played: Int) async throws {
+    func eventTrackFinished(trackId: String, played: Int) async throws {
         try await feedback(
             type: "trackStarted",
             json: [
-                "trackId": track_id,
+                "trackId": trackId,
                 "totalPlayedSeconds": played,
             ])
     }
 
-    func event_track_skip(track_id: String, played: Int) async throws {
+    func eventTrackSkip(trackId: String, played: Int) async throws {
         try await feedback(
             type: "skip",
             json: [
-                "trackId": track_id,
+                "trackId": trackId,
                 "totalPlayedSeconds": played,
             ])
     }
 
-    func event_like(track_id: String, remove: Bool = false, dislike: Bool = false) async throws {
+    func eventTrackLike(trackId: String, remove: Bool = false, dislike: Bool = false) async throws {
         let collection = dislike ? "dislikes" : "likes"
         let action = remove ? "remove" : "add-multiple"
 
         guard let uid = self.account?.uid else {
-            throw ClientError.UndefinedValue("account.uid")
+            throw ClientError.undefinedValue("account.uid")
         }
         let packet = try await session.post(
             "/users/\(uid)/\(collection)/tracks/\(action)",
-            data: ["track-ids": track_id],
+            data: ["track-ids": trackId],
             packet: LikePacket.self
         )
         if let error = packet.error {
-            throw ClientError.InvalidPacket("\(collection) -> " + error.message)
+            throw ClientError.invalidPacket("\(collection) -> " + error.message)
         }
     }
 
-    func get_lyrics(track_id: String) async throws -> String {
+    func getLyrics(trackId: String) async throws -> String {
         let packet = try await session.get(
-            "/tracks/\(track_id)/supplement",
+            "/tracks/\(trackId)/supplement",
             packet: LyricsPacket.self)
         return packet.result.lyrics.fullLyrics
     }
 
-    func event_play_audio(
-        track_id: String, from_cache: Bool,
-        play_id: String, duration: Int,
-        played: Int, album_id: Int
+    func eventPlayAudio(
+        trackId: String, fromCache: Bool,
+        playId: String, duration: Int,
+        played: Int, albumId: Int
     ) async throws {
         guard let uid = self.account?.uid else {
-            throw ClientError.UndefinedValue("account.uid")
+            throw ClientError.undefinedValue("account.uid")
         }
 
-        func get_timestamp(date: Date = Date()) -> String {
+        func getTimestamp(date: Date = Date()) -> String {
             let timestamp = DateFormatter()
             timestamp.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
             let nano =
@@ -282,28 +282,28 @@ final public class Client: ObservableObject {
         let packet = try await session.post(
             "/play-audio",
             data: [
-                "track-id": track_id,
-                "from-cache": from_cache,
+                "track-id": trackId,
+                "from-cache": fromCache,
                 "from": "desktop_win-home-playlist_of_the_day-playlist-default",
-                "play-id": play_id,
+                "play-id": playId,
                 "uid": uid,
-                "timestamp": get_timestamp(),
+                "timestamp": getTimestamp(),
                 "track-length-seconds": duration,
                 "total-played-seconds": played,
                 "end-position-seconds": played,
-                "album-id": album_id,
+                "album-id": albumId,
                 "playlist-id": nil,
-                "client-now": get_timestamp(),
+                "client-now": getTimestamp(),
             ], packet: BasePacket.self)
 
         if let error = packet.error {
-            throw ClientError.InvalidPacket("play audio -> " + error.message)
+            throw ClientError.invalidPacket("play audio -> " + error.message)
         }
     }
 
-    func download(track_id: String, filename: String) async throws {
+    func download(trackId: String, filename: String) async throws {
         let packet = try await self.session.get(
-            "/tracks/\(track_id)/download-info",
+            "/tracks/\(trackId)/download-info",
             packet: DownloadInfoPacket.self)
         var br = 0
         var info: DownloadInfoPacket.Info?
@@ -316,7 +316,7 @@ final public class Client: ObservableObject {
             }
         }
         guard let info = info else {
-            throw ClientError.InvalidDownloadInfo
+            throw ClientError.invalidDownloadInfo
         }
 
         let response = try await self.session.get(info.downloadInfoUrl)
@@ -324,7 +324,7 @@ final public class Client: ObservableObject {
         let xml = DownloadInfoXmlPacket(data: response)
         let src = "XGRlBW9FXlekgbPrRHuSiA" + String(xml.path.dropFirst()) + xml.s
         guard let data = src.data(using: .utf8) else {
-            throw ClientError.DataError
+            throw ClientError.dataError
         }
         let sign = Insecure.MD5
             .hash(data: data)

@@ -16,21 +16,21 @@ final public class Track: ObservableObject {
     var liked = false
     var cached = false
     @Published private var _lyrics: String? = nil
-    private var _lyrics_available: Bool = false
-    var task: Task<(), any Error>?
+    private var lyricsAvailable: Bool = false
+    var task: Task<(), Error>?
     var cache: String {
         UserDefaults.standard.string(forKey: "cache")
             ?? ProcessInfo.processInfo.environment["TMPDIR"] ?? "/tmp"
     }
 
-    let play_id = String(
+    let playId = String(
         format: "%d-%d-%d",
         Int.random(in: 1...1000),
         Int.random(in: 1...1000),
         Int.random(in: 1...1000)
     )
     var album: String { packet.albums.first!.title }
-    var album_id: Int { packet.albums.first!.id }
+    var albumId: Int { packet.albums.first!.id }
     var artist: String { packet.artists.first!.name }
     var name: String { "\(artist) - \(title)".replacingOccurrences(of: "/", with: "") }
     var path: String { "\(cache)/\(name).mp3" }
@@ -47,8 +47,8 @@ final public class Track: ObservableObject {
 
     var lyrics: String? {
         get {
-            if _lyrics == nil && _lyrics_available {
-                Task { try await get_lyrics() }
+            if _lyrics == nil && lyricsAvailable {
+                Task { try await getLyrics() }
             }
             return _lyrics
         }
@@ -56,8 +56,8 @@ final public class Track: ObservableObject {
             _lyrics = newValue
         }
     }
-    func get_lyrics() async throws {
-        let lyrics = try await station.client.get_lyrics(track_id: id)
+    func getLyrics() async throws {
+        let lyrics = try await station.client.getLyrics(trackId: id)
         DispatchQueue.main.sync {
             self.lyrics = lyrics
         }
@@ -69,7 +69,7 @@ final public class Track: ObservableObject {
         id = packet.id
         title = packet.title
         liked = packet.liked
-        _lyrics_available = packet.lyricsAvailable
+        lyricsAvailable = packet.lyricsAvailable
         cached = exists
     }
 
@@ -80,29 +80,29 @@ final public class Track: ObservableObject {
                 atPath: path.split(separator: "/").dropLast().joined(separator: "/"),
                 withIntermediateDirectories: true
             )
-            try await station.client.download(track_id: id, filename: path)
+            try await station.client.download(trackId: id, filename: path)
         }
 
         // self.__reload_tags()
     }
 
     func trace() async throws {
-        try await station.event_track_trace(track: self)
+        try await station.eventTrackTrace(track: self)
     }
 
     func skip() async throws {
-        try await station.event_track_skip(track: self)
+        try await station.eventTrackSkip(track: self)
     }
 
     func like() async throws {
-        try await station.event_track_like(track: self, remove: liked)
+        try await station.eventTrackLike(track: self, remove: liked)
         DispatchQueue.main.sync {
             self.liked.toggle()
         }
     }
 
     func dislike() async throws {
-        try await station.event_track_dislike(track: self)
+        try await station.eventTrackDislike(track: self)
         try FileManager.default.removeItem(atPath: path)
     }
 }

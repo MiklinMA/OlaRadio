@@ -15,7 +15,7 @@ struct PlayControls: View {
     private let bpd: CGFloat = 5
 
     private var disabled: Bool {
-        player.track == nil || player.is_error
+        player.track == nil || player.isError
     }
 
     var body: some View {
@@ -26,9 +26,9 @@ struct PlayControls: View {
                 HStack {
                     Spacer()
 
-                    Button(action: {
+                    Button {
                         player.like()
-                    }) {
+                    } label: {
                         Image(systemName: ("heart.circle.fill")).resizable()
                             .frame(width: bsz, height: bsz)
                             .aspectRatio(contentMode: .fit)
@@ -38,9 +38,9 @@ struct PlayControls: View {
                     .padding(bpd)
                     .disabled(disabled)
 
-                    Button(action: {
+                    Button {
                         player.toggle()
-                    }) {
+                    } label: {
                         Image(
                             systemName: (player.playing
                                 ? "pause.circle.fill"
@@ -54,9 +54,9 @@ struct PlayControls: View {
                     .disabled(!player.ready)
                     // .prefersDefaultFocus(true, in: ns)
 
-                    Button(action: {
+                    Button {
                         player.skip()
-                    }) {
+                    } label: {
                         Image(systemName: ("forward.circle.fill")).resizable()
                             .frame(width: bsz, height: bsz)
                             .aspectRatio(contentMode: .fit)
@@ -65,9 +65,9 @@ struct PlayControls: View {
                     .padding(bpd)
                     .disabled(disabled)
 
-                    Button(action: {
+                    Button {
                         player.dislike()
-                    }) {
+                    } label: {
                         Image(systemName: ("heart.slash.circle.fill")).resizable()
                             .frame(width: bsz, height: bsz)
                             .aspectRatio(contentMode: .fit)

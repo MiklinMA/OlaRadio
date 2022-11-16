@@ -10,24 +10,21 @@ import Combine
 import Foundation
 
 enum PlayerError: Error {
-    case NoToken
-    case NoAccess
-    case NoTrack
-    case NoStation
-    case TaskError
-    case InvalidURL
+    case noAccess
+    case noStation
+    case taskError
 }
 
 class Player: NSObject, ObservableObject {
     @Published var track: Track?
-    @Published var error_message: String?
-    @Published var is_error: Bool = false
+    @Published var errorMessage: String?
+    @Published var isError: Bool = false
     @Published var station: Station?
 
     private var token: String? {
         UserDefaults.standard.string(forKey: "token")
     }
-    private var station_id: String {
+    private var stationId: String {
         UserDefaults.standard.string(forKey: "station") ?? "user:onyourwave"
     }
 
@@ -41,10 +38,10 @@ class Player: NSObject, ObservableObject {
     override init() {
         super.init()
         guard let token = token else {
-            show_error("Token not found")
+            showError("Token not found")
             return
         }
-        let station = Station(token: token, station_id: station_id)
+        let station = Station(token: token, stationId: stationId)
         stationBinding = station.client.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }
@@ -52,14 +49,14 @@ class Player: NSObject, ObservableObject {
         self.station = station
     }
 
-    func show_error(_ message: String) {
+    func showError(_ message: String) {
         DispatchQueue.main.sync {
-            self.error_message = message
-            self.is_error = true
+            self.errorMessage = message
+            self.isError = true
         }
     }
-    func show_error(_ error: Error) {
-        show_error(error.localizedDescription)
+    func showError(_ error: Error) {
+        showError(error.localizedDescription)
     }
 
     var ready: Bool {
@@ -79,7 +76,7 @@ class Player: NSObject, ObservableObject {
     func play() {
         guard ready else { return }
         guard let player = player else {
-            load_track()
+            loadTrack()
             return
         }
         player.play()
@@ -92,9 +89,9 @@ class Player: NSObject, ObservableObject {
             track.position = position
 
             do { try await track.skip() } catch {
-                self.show_error(error)
+                self.showError(error)
             }
-            load_track()
+            loadTrack()
         }
     }
     func like() {
@@ -106,7 +103,7 @@ class Player: NSObject, ObservableObject {
                     self.track = track
                 }
             } catch {
-                self.show_error(error)
+                self.showError(error)
             }
         }
     }
@@ -114,12 +111,12 @@ class Player: NSObject, ObservableObject {
         Task {
             guard let track = track else { return }
             do { try await track.dislike() } catch {
-                self.show_error(error)
+                self.showError(error)
             }
             skip()
         }
     }
-    func load_track() {
+    func loadTrack() {
         print("next track")
         Task {
             guard ready else { return }
@@ -128,15 +125,14 @@ class Player: NSObject, ObservableObject {
 
             do {
                 guard let station = station else {
-                    throw PlayerError.NoStation
+                    throw PlayerError.noStation
                 }
-                let track = try await station.get_track()
-                guard let _ = await track.task?.result else {
-                    throw PlayerError.TaskError
-                }
+                let track = try await station.getTrack()
+                try await track.task?.value  // wait for downloading
+
                 url = URL(filePath: track.path)
                 guard url.startAccessingSecurityScopedResource() else {
-                    throw PlayerError.NoAccess
+                    throw PlayerError.noAccess
                 }
                 let player = try AVAudioPlayer(contentsOf: url)
                 player.delegate = self
@@ -150,7 +146,7 @@ class Player: NSObject, ObservableObject {
                     }
                 }
             } catch {
-                self.show_error(error)
+                self.showError(error)
             }
         }
     }
@@ -163,6 +159,6 @@ extension Player: AVAudioPlayerDelegate {
                 track.position = track.duration
             }
         }
-        load_track()
+        loadTrack()
     }
 }

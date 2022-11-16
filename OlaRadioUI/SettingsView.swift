@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-let DEFAULT_CACHE = ProcessInfo.processInfo.environment["TMPDIR"] ?? "/tmp"
+let defaultCache = ProcessInfo.processInfo.environment["TMPDIR"] ?? "/tmp"
 
 struct GeneralSettingsView: View {
     @AppStorage("token") private var token: String = ""
-    @AppStorage("cache") private var cache: String = DEFAULT_CACHE
+    @AppStorage("cache") private var cache: String = defaultCache
     @AppStorage("station") private var station: String = "user:onyourwave"
 
     var body: some View {
@@ -20,7 +20,6 @@ struct GeneralSettingsView: View {
             HStack {
                 TextField("File download location:", text: $cache)
                 Button("...") {
-                    print(DEFAULT_CACHE)
                     let panel = NSOpenPanel()
                     panel.allowsMultipleSelection = false
                     panel.canChooseFiles = false
@@ -43,7 +42,6 @@ struct SettingsView: View {
     }
     var body: some View {
         GeneralSettingsView()
-        /*
         TabView {
             GeneralSettingsView()
                 .tabItem {
@@ -51,7 +49,6 @@ struct SettingsView: View {
                 }
                 .tag(Tabs.general)
         }
-        */
     }
 }
 

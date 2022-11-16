@@ -20,8 +20,8 @@ struct ContentView: View {
         .padding(.vertical)
         .frame(maxWidth: 300)
         .environmentObject(player)
-        .alert(isPresented: $player.is_error) {
-            Alert(title: Text(player.error_message ?? "Unknown error"))
+        .alert(isPresented: $player.isError) {
+            Alert(title: Text(player.errorMessage ?? "Unknown error"))
         }
     }
 }
