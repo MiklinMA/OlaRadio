@@ -19,6 +19,7 @@
 		09CC69AA291F370400CC9245 /* OlaRadioUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC69A9291F370400CC9245 /* OlaRadioUITests.swift */; };
 		09CC69B4291F370400CC9245 /* OlaRadioUIUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC69B3291F370400CC9245 /* OlaRadioUIUITests.swift */; };
 		09CC69B6291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CC69B5291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift */; };
+		09CF6E912924D03C0003A267 /* main.yml in Resources */ = {isa = PBXBuildFile; fileRef = 09CF6E902924D03C0003A267 /* main.yml */; };
 		09E396AC292261BD00822725 /* Station.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E396AB292261BD00822725 /* Station.swift */; };
 		09E396AE2923725900822725 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E396AD2923725900822725 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
@@ -58,6 +59,7 @@
 		09CC69AF291F370400CC9245 /* OlaRadioUIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OlaRadioUIUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		09CC69B3291F370400CC9245 /* OlaRadioUIUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaRadioUIUITests.swift; sourceTree = "<group>"; };
 		09CC69B5291F370400CC9245 /* OlaRadioUIUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaRadioUIUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		09CF6E902924D03C0003A267 /* main.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = main.yml; path = .github/workflows/main.yml; sourceTree = "<group>"; };
 		09E396AB292261BD00822725 /* Station.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Station.swift; sourceTree = "<group>"; };
 		09E396AD2923725900822725 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,6 +103,7 @@
 		09CC698B291F370300CC9245 = {
 			isa = PBXGroup;
 			children = (
+				09CF6E902924D03C0003A267 /* main.yml */,
 				09C78A6D29215B0400811B15 /* MyPlayground.playground */,
 				09CC6996291F370400CC9245 /* OlaRadioUI */,
 				09CC69A8291F370400CC9245 /* OlaRadioUITests */,
@@ -270,6 +273,7 @@
 			files = (
 				09CC699F291F370400CC9245 /* Preview Assets.xcassets in Resources */,
 				09CC699C291F370400CC9245 /* Assets.xcassets in Resources */,
+				09CF6E912924D03C0003A267 /* main.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
