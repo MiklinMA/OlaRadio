@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 from hashlib import md5
 import xml.dom.minidom as minidom
@@ -18,11 +19,21 @@ class Session(requests.Session):
 
     def request(self, method, url, raw=False, *args, **kwargs):
         kwargs.pop('allow_redirects', None)
-        result = super().request(
-            method,
-            url if raw else f"{self.base_url}{url}",
-            *args, **kwargs
-        )
+        error = None
+        for i in range(10):
+            try:
+                result = super().request(
+                    method,
+                    url if raw else f"{self.base_url}{url}",
+                    *args, **kwargs
+                )
+                break
+            except Exception as err:
+                time.sleep(5)
+                error = err
+        else:
+            raise(error)
+
         # first request should be without user-agent header
         self.headers.update({
             'User-Agent': "Yandex-Music-API",
